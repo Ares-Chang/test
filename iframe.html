@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<iframe id="iframe" src="./index.html" frameborder="0"></iframe>
+</body>
+<script>
+	function setIframeHeight(id) {
+		// 计算页面的实际高度，iframe自适应会用到
+		function calcPageHeight(doc) {
+			var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+			var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+			var height = Math.max(cHeight, sHeight)
+			return height
+		}
+		var iframe = document.getElementById(id)
+		iframe.onload = function () {
+			var iDoc = iframe.contentDocument || iframe.document
+			var height = calcPageHeight(iDoc)
+			iframe.style.height = height + 'px'
+		}
+	}
+	setIframeHeight('iframe')
+</script>
+
+</html>

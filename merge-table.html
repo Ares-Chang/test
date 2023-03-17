@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>合并表格并下载</title>
+  </head>
+  <style>
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+    .down_load {
+      width: 90px;
+      height: 36px;
+      background-color: red;
+      text-align: center;
+      line-height: 36px;
+      color: white;
+      /* position: fixed;
+      right: 50px;
+      top: 100px; */
+      z-index: 1999;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <div class="header">
+        <div class="down_load">下载</div>
+      </div>
+      <div class="main">
+        <div class="article">
+          <table border="1" cellspacing="0" cellpadding="0" style="width: 100%">
+            <thead style="text-align: center">
+              <th colspan="4">矿长属地类安全网格化检查表</th>
+            </thead>
+            <thead style="text-align: left">
+              <th colspan="4">检查时间：</th>
+            </thead>
+            <thead style="text-align: center">
+              <th v-for="(item,index) in header" :key="index">
+                {{item.title}}
+              </th>
+            </thead>
+            <tbody
+              v-for="(block,index) in dataList"
+              :key="index"
+              style="text-align: center"
+            >
+              <tr>
+                <td :colspan="header.length">{{block.title}}</td>
+              </tr>
+              <tr v-for="(item,tr_idnex) in block.data" :key="tr_idnex">
+                <td
+                  v-for="(h,index) in header"
+                  :key="index"
+                  :rowspan="block.mergeList[index][tr_idnex]"
+                  v-if="block.mergeList && block.mergeList[index][tr_idnex]"
+                >
+                  {{item[h.key]}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+    <script>
+      $(function () {
+        new Vue({
+          el: '#app',
+          data: {
+            header: [
+              {
+                title: '序号',
+                key: 'index',
+                style: {
+                  width: '400px'
+                }
+              },
+              {
+                title: '检查项目',
+                key: 'a2',
+                merge: true
+              },
+              {
+                title: '检查标准',
+                key: 'a3'
+              },
+              {
+                title: '检查结果',
+                key: 'a4'
+              }
+            ],
+            dataList: [
+              {
+                title: '一、安全生产责任制检查表',
+                data: [
+                  {
+                    index: 1,
+                    a2: '安全生产责任制',
+                    a3: 1,
+                    a4: 4,
+                    a5: 5
+                  },
+                  {
+                    index: 2,
+                    a2: '生产责任制',
+                    a3: 2,
+                    a4: 4,
+                    a5: 5
+                  },
+                  {
+                    index: 3,
+                    a2: '安全生产责任制',
+                    a3: 3,
+                    a4: 4,
+                    a5: 5
+                  },
+                  {
+                    index: 4,
+                    a2: '安全生产责任制',
+                    a3: 4,
+                    a4: 4,
+                    a5: 5
+                  },
+                  {
+                    index: 5,
+                    a2: '安全生产责任制',
+                    a3: 4,
+                    a4: 4,
+                    a5: 5
+                  }
+                ]
+              },
+              {
+                title: '二、规章制度检查表',
+                data: [
+                  {
+                    index: 1,
+                    a2: '规章制度',
+                    a3: 1,
+                    a4: 4,
+                    a5: 5
+                  },
+                  {
+                    index: 2,
+                    a2: '规章制度',
+                    a3: 2,
+                    a4: 4,
+                    a5: 5
+                  },
+                  {
+                    index: 3,
+                    a2: '规章制度',
+                    a3: 3,
+                    a4: 4,
+                    a5: 5
+                  }
+                ]
+              }
+            ]
+          },
+          mounted() {
+            this.dataList.map(dataList => {
+              this.$set(dataList, 'mergeList', []) // 初始化合并列表，因为 data 中未定义追踪，特此需要 $set
+              this.header.map((item, index) => {
+                this.setMergeList(dataList, index, item.key, item.merge)
+              })
+            })
+            console.log(this.dataList)
+          },
+          methods: {
+            /**
+             * 创建要合并的数据
+             * @param {Object} data 表格数据体
+             * @param {Number} idx 要创建值的下标
+             * @param {String} key 要查询的键名
+             * @param {Boolean} merge 控制是否要合并数据
+             */
+            setMergeList(data, idx, key, merge) {
+              // 判别是否需要合并
+              if (!merge) {
+                // 不需要合并的初始化默认值 1
+                return (data.mergeList[idx] = new Array(data.data.length).fill(
+                  1
+                ))
+              }
+              // 以下为需要合并的处理
+              data.mergeList[idx] = [] // 初始化列表，后续会向内部填充数据
+              let position = 0 // 控制二维列表下标，数据相同情况下不处理，不同情况下替换为处理数据下标
+              // 开始遍历数据
+              data.data.map((item, index) => {
+                // 如果当前处理数据是第一条，没有上一条做对比，不做处理，填充 1
+                if (index === 0) {
+                  data.mergeList[idx].push(1)
+                  position = 0 // 防止进入下一轮遍历时无法从第一条开始
+                } else {
+                  // 判别当前值和上一条值是否一致
+                  if (item[key] === data.data[index - 1][key]) {
+                    data.mergeList[idx][position] += 1 // 如果一致，合并数 + 1
+                    data.mergeList[idx].push(0) // 当前下标补 0 删除
+                  } else {
+                    // 不符合条件，正常渲染
+                    data.mergeList[idx].push(1)
+                    position = index // 下标置为 index
+                  }
+                }
+              })
+            }
+          }
+        })
+      })
+    </script>
+    <script type="text/javascript">
+      $(function () {
+        $('.down_load').click(function () {
+          saveData()
+        })
+        function saveData(params) {
+          var contentNode = $('.article').clone()
+          data = wordExport(contentNode)
+          downLoad(data, 'test')
+        }
+        function wordExport(contentNode) {
+          var static = {
+            mhtml: {
+              top:
+                'Mime-Version: 1.0\nContent-Base: ' +
+                location.href +
+                '\nContent-Type: Multipart/related; boundary="NEXT.ITEM-BOUNDARY";type="text/html"\n\n--NEXT.ITEM-BOUNDARY\nContent-Type: text/html; charset="utf-8"\nContent-Location: ' +
+                location.href +
+                '\n\n<!DOCTYPE html>\n<html>\n_html_</html>',
+              head: '<head>\n<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n<style>\n_styles_\n</style>\n</head>\n',
+              body: '<body>_body_</body>'
+            }
+          }
+          var options = {
+            maxWidth: 624
+          }
+          // Clone selected element before manipulating it
+          var markup = $(contentNode).clone()
+          // Remove hidden elements from the output
+          markup.each(function () {
+            var self = $(contentNode)
+            if (self.is(':hidden')) self.remove()
+          })
+
+          // Embed all images using Data URLs
+          var images = Array()
+          var img = markup.find('img')
+          for (var i = 0; i < img.length; i++) {
+            // Calculate dimensions of output image
+            var w = Math.min(img[i].width, options.maxWidth)
+            var h = img[i].height * (w / img[i].width)
+            // Create canvas for converting image to data URL
+            var canvas = document.createElement('CANVAS')
+            canvas.width = w
+            canvas.height = h
+            // Draw image to canvas
+            var context = canvas.getContext('2d')
+            context.drawImage(img[i], 0, 0, w, h)
+            // Get data URL encoding of image
+            var uri = canvas.toDataURL('image/png')
+            $(img[i]).attr('src', img[i].src)
+            img[i].width = w
+            img[i].height = h
+            // Save encoded image to array
+            images[i] = {
+              type: uri.substring(uri.indexOf(':') + 1, uri.indexOf(';')),
+              encoding: uri.substring(uri.indexOf(';') + 1, uri.indexOf(',')),
+              location: $(img[i]).attr('src'),
+              data: uri.substring(uri.indexOf(',') + 1)
+            }
+          }
+
+          // Prepare bottom of mhtml file with image data
+          var mhtmlBottom = '\n'
+          for (var i = 0; i < images.length; i++) {
+            mhtmlBottom += '--NEXT.ITEM-BOUNDARY\n'
+            mhtmlBottom += 'Content-Location: ' + images[i].location + '\n'
+            mhtmlBottom += 'Content-Type: ' + images[i].type + '\n'
+            mhtmlBottom +=
+              'Content-Transfer-Encoding: ' + images[i].encoding + '\n\n'
+            mhtmlBottom += images[i].data + '\n\n'
+          }
+          mhtmlBottom += '--NEXT.ITEM-BOUNDARY--'
+
+          //TODO: load css from included stylesheet
+          var styles = ''
+
+          // Aggregate parts of the file together
+          var fileContent =
+            static.mhtml.top.replace(
+              '_html_',
+              static.mhtml.head.replace('_styles_', styles) +
+                static.mhtml.body.replace('_body_', markup.html())
+            ) + mhtmlBottom
+
+          // Create a Blob with the file contents
+          var blob = new Blob([fileContent], {
+            type: 'application/msword;charset=utf-8'
+          })
+          return fileContent
+        }
+      })
+      /* 
+    wps:kswps
+    docx:msword
+    */
+      function downLoad(data, fileName) {
+        let blob = new Blob([data], { type: 'application/msword' })
+        let url = URL.createObjectURL(blob)
+        let link = document.createElement('a')
+        link.setAttribute('href', url)
+        link.setAttribute('download', `${fileName}.doc`)
+        link.style.visibility = 'hidden'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+    </script>
+  </body>
+</html>

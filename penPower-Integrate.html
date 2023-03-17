@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>penPower-Integrate</title>
+  </head>
+  <body>
+    <canvas id="penPower" width="600" height="375"></canvas>
+    <button onclick="submit()">submit</button>
+    <script>
+      /**
+       * PenPower，外部必须实现 penPowerSubmit 函数
+       */
+      class PenPower {
+        #BASE_URL = 'http://localhost:8089/PPSignSDK'
+        #INIT = `${this.#BASE_URL}/InitialDevice`
+        #CLOSE = `${this.#BASE_URL}/UninitialDevice`
+        #GETINK = `${this.#BASE_URL}/GetInks`
+        #GETSTATE = `${this.#BASE_URL}/GetDeviceConfirmOrCancelKeyStatus`
+        #GETBASE64 = `${this.#BASE_URL}/Encode`
+
+        // 图片类型
+        #TYPELIST = {
+          JPG: 2,
+          PNG: 3,
+          GIF: 4,
+          TIF: 5,
+          INK: 6
+        }
+
+        canvas = null // canvas
+        ctx = null // canvas 上下文
+        step = 500 // 轮询步符/ms
+        timer = null // 轮询定时器
+
+        constructor() {
+          /** ！！！ 重要，也可以不要 canvas ！！！ **/
+          this.canvas = document.getElementById('penPower')
+
+          if (this.canvas?.getContext) {
+            this.ctx = this.canvas.getContext('2d')
+          }
+
+          this.init()
+        }
+
+        async init() {
+          const res = await fetch(
+            `${this.#INIT}?id=2&width=580&height=380`
+          ).then(res => res.json())
+          if (!res) return alert('设备连接失败！')
+          this.linkBoard()
+        }
+
+        /**
+         * 关闭与设备连接轮询
+         */
+        async close() {
+          clearInterval(this.timer)
+          const res = await fetch(`${this.#CLOSE}?id=2`).then(res => res.json())
+          if (!res) return alert('设备关闭失败！')
+          this.clearCanvas()
+        }
+
+        /**
+         * 连接设备，轮询机制，50 ms 请求一次设备。
+         */
+        linkBoard() {
+          this.timer = setInterval(() => {
+            Promise.all([this.getFrames(), this.getState()])
+          }, this.step)
+        }
+
+        /**
+         * 获取设备画面帧
+         */
+        async getFrames() {
+          if (!this.ctx) return
+          const res = JSON.parse(
+            await fetch(this.#GETINK).then(res => res.json())
+          )
+          res.forEach(item => {
+            if (item.EventType !== 0) return
+
+            const img = new Image()
+            // 等待图片加载完成再写入
+            img.onload = () => {
+              this.ctx.drawImage(
+                img,
+                0,
+                0,
+                this.canvas.width,
+                this.canvas.height
+              )
+            }
+            img.src = `data:image/png;base64,${item.Image}`
+          })
+        }
+        /**
+         * 获取设备状态
+         */
+        async getState() {
+          const res = JSON.parse(
+            await fetch(this.#GETSTATE).then(res => res.json())
+          )
+          switch (res) {
+            case 1:
+              // 触发设备确认，主动触发 class 外部函数
+              penPowerSubmit()
+              break
+            case 0:
+              // 触发设备取消，清空画布
+              this.clearCanvas()
+              break
+            case -1:
+              // 设备正常
+              break
+
+            default:
+              alert('设备连接异常！')
+              break
+          }
+        }
+
+        /**
+         * 清空画布
+         */
+        clearCanvas() {
+          if (!this.ctx) return
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        }
+
+        /**
+         * 获取 base64 图片编码
+         * @return {string} base64 格式图片，无前缀
+         */
+        async getBase64() {
+          const res = await fetch(
+            `${this.#GETBASE64}?type=${this.#TYPELIST.PNG}`
+          ).then(res => res.json())
+          return res
+        }
+      }
+
+      const board = new PenPower()
+
+      async function submit() {
+        const res = await board.getBase64()
+        const url = `data:image/png;base64,${res}`
+        console.log(url)
+      }
+      /**
+       * PenPower class 必须实现函数，
+       * 用户点击术位板确认会触发此函数
+       */
+      function penPowerSubmit() {
+        submit()
+      }
+    </script>
+  </body>
+</html>

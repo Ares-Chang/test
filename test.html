@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/attributify.global.js"></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #212125;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="barChart" style="width: 100%; height: 100px"></div>
+      <div id="lineChart" style="width: 100%; height: 500px"></div>
+    </div>
+
+    <script>
+      const app = new Vue({
+        el: 'app',
+        data: {
+          timeList: []
+        },
+        created() {
+          this.initTimeList()
+        },
+        mounted() {
+          this.initBarEcharts()
+          this.initLineEcharts()
+        },
+        methods: {
+          initTimeList() {
+            const _arr = Array(24)
+              .fill(null)
+              .map((_, index) => `${`${index + 1}`.padStart(2, '0')}:00`)
+
+            this.timeList = [..._arr.splice(7), ..._arr]
+          },
+          initBarEcharts() {
+            var myChart = echarts.init(document.getElementById('barChart'))
+
+            const res = [
+              {
+                start: '09:00',
+                end: '11:00'
+              },
+              {
+                start: '14:00',
+                end: '15:00'
+              },
+              {
+                start: '18:00',
+                end: '20:00'
+              }
+            ]
+
+            const errList = res.map(item => {
+              const start = Number(item.start?.split(':')[0] || 0)
+              const end = Number(item.end?.split(':')[0] || 0)
+              const diff = Math.abs(start - end) // 取绝对差值
+
+              return {
+                ...item
+              }
+            })
+
+            console.log(errList)
+
+            option = {
+              tooltip: {
+                padding: 0,
+                // confine: true, // 防止超出页面显示范围
+                borderWidth: 0,
+                position: 'bottom',
+                formatter: params => {
+                  console.log(params.seriesIndex)
+                  return `<div color-white w-380px>
+                            <div
+                              flex
+                              justify-between
+                              p-10px
+                              bg-black
+                              border-b="1px solid #c05529"
+                            >
+                              <span>故障详情</span>
+                            </div>
+                            <div bg="#1c1b1c" text-14px p-10px>
+                              <div flex justify-between>
+                                <div h-24px bg="#dd5e24" px-6px py-4px mr-10px rd>Y31-090</div>
+                                <div flex-16>
+                                  <div flex mb-10px>
+                                    <div w-50% style="white-space: normal;">
+                                      <span font-bold>故障大类：</span>
+                                      <span>机电故障 机电故障 机电故障 机电故障</span>
+                                    </div>
+                                    <div w-50% style="white-space: normal;">
+                                      <span font-bold ml-2>故障细类：</span>
+                                      <span>发动机故障</span>
+                                    </div>
+                                  </div>
+                                  <div flex mb-10px>
+                                    <div font-bold>故障解除：</div>
+                                    <div>2021/02/29 18:00</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div flex mb-6>
+                                <div font-bold>维修详情：</div>
+                                <div>2021/02/29 18:00</div>
+                              </div>
+                              <div flex gap-3>
+                                <img w="80px" src="https://www.areschang.top/hero.jpg" alt="" />
+                                <img w="80px" src="https://www.areschang.top/hero.jpg" alt="" />
+                              </div>
+                            </div>
+                          </div>`
+                }
+              },
+              xAxis: {
+                position: 'top',
+                type: 'value',
+                min: 0,
+                max: 23,
+                interval: 1,
+                axisTick: {
+                  show: false // 隐藏刻度线
+                },
+                axisLine: {
+                  show: false // 隐藏坐标轴
+                },
+                axisLabel: {
+                  color: '#ffffff',
+                  formatter: param => this.timeList[param]
+                },
+                splitLine: {
+                  show: false
+                }
+              },
+              yAxis: {
+                type: 'category',
+                data: [''],
+                axisLine: {
+                  show: false
+                }
+              },
+              grid: { bottom: 0 },
+              series: [
+                {
+                  type: 'bar',
+                  stack: 'total',
+                  barWidth: 30,
+                  itemStyle: {
+                    normal: {
+                      color: '#87c192'
+                    }
+                  },
+                  emphasis: {
+                    focus: 'series'
+                  },
+                  data: [1]
+                },
+                {
+                  type: 'bar',
+                  stack: 'total',
+                  barWidth: 30,
+                  itemStyle: {
+                    normal: {
+                      color: '#e05f15'
+                    }
+                  },
+                  emphasis: {
+                    focus: 'series'
+                  },
+                  data: [2]
+                },
+                {
+                  type: 'bar',
+                  stack: 'total',
+                  barWidth: 30,
+                  itemStyle: {
+                    normal: {
+                      color: '#87c192'
+                    }
+                  },
+                  emphasis: {
+                    focus: 'series'
+                  },
+                  data: [3]
+                }
+              ]
+            }
+
+            myChart.setOption(option)
+          },
+          initLineEcharts() {
+            var myChart = echarts.init(document.getElementById('lineChart'))
+
+            option = {
+              grid: { top: 0 },
+              xAxis: {
+                axisTick: {
+                  show: false // 隐藏刻度线
+                },
+                axisLine: {
+                  show: false // 隐藏坐标轴
+                },
+                axisLabel: {
+                  show: false, // 隐藏坐标值
+                  interval: 0 // 所有数据一行显示不隐藏
+                },
+                splitLine: {
+                  show: true,
+                  lineStyle: {
+                    type: 'solid',
+                    color: '#393939'
+                  }
+                },
+                type: 'category',
+                data: this.timeList
+              },
+
+              yAxis: {
+                axisTick: {
+                  show: false
+                },
+                axisLine: {
+                  show: false
+                },
+                splitLine: {
+                  show: true,
+                  lineStyle: {
+                    type: 'dashed',
+                    color: '#838183'
+                  }
+                },
+                axisLabel: {
+                  color: '#ffffff'
+                },
+                type: 'category',
+                data: ['出发点', '装点1', '装点2', '装点3', '装点4']
+              },
+              series: [
+                {
+                  type: 'line',
+                  showSymbol: false,
+                  yAxisIndex: 0,
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: '#bd541e'
+                      }
+                    }
+                  },
+                  data: [
+                    0, 1, 2, 2, 4, 3, 1, 4, 1, 3, 1, 4, 2, 3, 2, 1, 4, 2, 4, 1,
+                    2, 3, 2, 1
+                  ]
+                }
+              ]
+            }
+
+            myChart.setOption(option)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

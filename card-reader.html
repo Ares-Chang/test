@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      #app {
+        width: 100vw;
+        height: 100vh;
+        line-height: 100vh;
+        background-color: pink;
+        text-align: center;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" onclick="handle()">
+      <span id="info"></span>
+      <span>click me !</span>
+    </div>
+    <script>
+      // let opt = true
+      // document.querySelector('#info').innerText = opt ? 'open' : 'close'
+      // function handle() {
+      //   fetch(
+      //     `http://10.168.1.187:7000/dev/screenbacklight?opt=${
+      //       opt ? 'open' : 'close'
+      //     }`
+      //   ).then(res => {
+      //     console.log(res)
+      //     opt = !opt
+      //     document.querySelector('#info').innerText = opt ? 'open' : 'close'
+      //   })
+      // }
+
+    </script>
+    <script>
+      /**
+       * 初始化读卡器
+       */
+      function initCardReader() {
+        const socket = new WebSocket('ws://127.0.0.1:33666') //客户端电脑本地IP，非服务器IP，无需修改
+        socket.onopen = function () {
+          socket.send('EST_GetVersion#') // 获取控件版本号
+          // 轮循读卡器
+          setInterval(() => {
+            socket.send('EST_Reader_ReadIDCard#') // 读取身份证信息
+            // 连续读卡有 500ms 的间隔
+            const timer = setTimeout(() => {
+              socket.send('EST_ReadBankCard#') // 读取银行卡信息
+              clearTimeout(timer)
+            }, 500)
+          }, 1000)
+        }
+        socket.onmessage = function (res) {
+          if (typeof res.data !== 'string')
+            return alert('连接异常,请检查是否成功安装控件.')
+
+          const { rCode: code, fun, errMsg, ...data } = JSON.parse(res.data)
+
+          if (code !== '0') return console.log(errMsg)
+
+          switch (fun) {
+            case 'EST_GetVersion#': // 获取版本号
+              console.log('版本号：', errMsg)
+              break
+
+            case 'EST_Reader_ReadIDCard#': // 单次 -> 读卡
+              console.log('身份证号：', data.certNo)
+              break
+
+            case 'EST_ReadBankCard#': // 银行卡卡号
+              console.log('银行卡号:', data.bankCard)
+              break
+
+            default:
+              break
+          }
+        }
+      }
+      initCardReader()
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .active {
+      position: fixed;
+      top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <div class="header" style="background-color: pink;">
+    123
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>
+
+<script>
+  const box = document.querySelector('.header')
+  const offsetTop = box.offsetTop
+  window.addEventListener('scroll', () => {
+    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop < offsetTop) {
+      box.classList.remove('active')
+    } else {
+      box.classList.add('active')
+    }
+  })
+</script>
+
+</html>

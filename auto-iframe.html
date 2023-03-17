@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自适应高度</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+    <script>
+      $(() => {
+        setTimeout(() => {
+          function reinitIframe(ifr) {
+            function calcPageHeight(doc) {
+              var cHeight = Math.max(
+                doc.body.clientHeight,
+                doc.documentElement.clientHeight
+              )
+              var sHeight = Math.max(
+                doc.body.scrollHeight,
+                doc.documentElement.scrollHeight
+              )
+              var height = Math.max(cHeight, sHeight)
+              return height
+            }
+            setInterval(() => {
+              var iDoc =
+                ifr.contentDocument || ifr.document || ifr.contentWindow
+              var height = calcPageHeight(iDoc)
+              console.log(height)
+              ifr.style.height = height + 'px'
+            }, 2000)
+          }
+
+          console.log($('iframe'))
+          $('iframe').each((index, item) => reinitIframe(item))
+        }, 2000)
+      })
+    </script>
+  </head>
+  <body>
+    <iframe width="100%" src="./test.html"></iframe>
+    <iframe width="100%" src="./merge-table.html"></iframe>
+  </body>
+</html>

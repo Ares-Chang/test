@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.13/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+    <!-- UnoCss @link: https://github.com/unocss/unocss/blob/main/packages/runtime/README.md -->
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/attributify.global.js"></script>
+    <style>
+      [v-cloak] {
+        display: none !important;
+      }
+      [un-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body m-0 p-0>
+    <div
+      id="app"
+      v-cloak
+      un-cloak
+      w="[100vw]"
+      h="[100vh]"
+      flex
+      justify-center
+      items-center
+      style="background: radial-gradient(#636363, #202020)"
+    >
+      <div id="main" style="width: 800px; height: 500px"></div>
+    </div>
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {},
+        mounted() {
+          this.echartInit()
+        },
+        methods: {
+          echartInit() {
+            // 基于准备好的dom，初始化echarts实例
+            const myChart = echarts.init(document.getElementById('main'))
+
+            // 指定图表的配置项和数据
+            const option = {
+              title: {
+                left: 'center',
+                text: '油耗趋势',
+                textStyle: {
+                  color: '#ffffff'
+                }
+              },
+              xAxis: {
+                type: 'category',
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+              },
+              yAxis: {
+                type: 'value'
+              },
+              series: [
+                {
+                  data: [300, 240, 500, 360, 150, 620, 380],
+                  type: 'line'
+                }
+              ]
+            }
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

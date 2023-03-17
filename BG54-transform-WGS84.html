@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.min.js"
+      integrity="sha512-pLnzlcFjcj9A9ggTfXZyscd+BWAV9pHdDrLekEoTimItxZI3uOAi7CSLXAHGZu7zRgG9Xyhl9bG3A1uRSJJOJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://unpkg.com/gcoord/dist/gcoord.js"></script>
+  </head>
+  <body>
+    <script>
+      // const [longitude, latitude] = gcoord.transform(
+      //   [89.22977280895985, 44.81189807089384], // 经纬度坐标
+      //   gcoord.WGS84, // 目标坐标系
+      //   gcoord.BD09 // 当前坐标系
+      // )
+      // console.log(longitude, latitude, 123)
+
+      const data = [411928.38, 5859270.09]
+
+      // proj4.defs(
+      //   'EPSG:2437',
+      //   '+proj=tmerc +lat_0=0 +lon_0=120 +k=1 +x_0=500000 +y_0=0 +ellps=krass +units=m +no_defs'
+      // )
+
+      // 将经纬度2437(北京54)的坐标系转换成4326(WGS84)
+      // const fromProjection = `+proj=tmerc +lat_0=0 +lon_0=120 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs`
+      const fromProjection = `+proj=tmerc +lat_0=0 +lon_0=120 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=322.3328330797, 345.1588200277, -98.367436474, -8.4517181865, 7.148806486, -8.3536839477, -1.527262362 +units=m +no_defs`
+      // const toProjection = `+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs`
+      const transformPoint = proj4(fromProjection, 'EPSG:4326', data)
+      // const transformPoint = proj4('EPSG:2437', 'EPSG:4326', data)
+
+      console.log(`${transformPoint[0]}, ${transformPoint[1]}`, transformPoint)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .main {
+        display: grid;
+        grid-template-columns: repeat(3, 50px);
+        grid-gap: 10px;
+      }
+      .test {
+        width: 50px;
+        text-align: center;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        /* 设置显示几行 */
+        -webkit-line-clamp: 2;
+        /* -webkit-box-orient: vertical; */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="test">四个字四</div>
+      <div class="test">五个字五个</div>
+      <div class="test">六个字六个字</div>
+      <div class="test">七个字七个字七</div>
+      <div class="test">八个字八个字八个</div>
+      <div class="test">九个字九个字九个字</div>
+    </div>
+  </body>
+</html>

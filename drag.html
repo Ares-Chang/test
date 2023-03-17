@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>HTML5学习</title>
+    <style type="text/css">
+      .div1 {
+        width: 200px;
+        height: 100px;
+        padding: 20px;
+        border: 1px solid #000;
+      }
+      p {
+        font-size: 28px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div
+        id="div1"
+        class="div1"
+        ondrop="drop(event)"
+        ondragover="allowDrop(event)"
+      ></div>
+      <p id="drag1" draggable="true" ondragstart="drag(event)">Hello World</p>
+    </div>
+    <script>
+      function drag(e) {
+        e.dataTransfer.setData('Text', e.target.id)
+      }
+      function allowDrop(e) {
+        e.preventDefault()
+      }
+      function drop(e) {
+        e.preventDefault()
+        var data = e.dataTransfer.getData('Text')
+        e.target.appendChild(document.getElementById(data))
+      }
+    </script>
+  </body>
+</html>

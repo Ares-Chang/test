@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- 引入高拍仪JS接口-->
+    <script src="gpyhs.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <div id="CameraCtl" style="width: 600px; height: 400px"></div>
+    <button onclick="takePhoto()">拍照</button>
+    <script>
+      window.onload = () => {
+        init()
+      }
+      /**
+       * 初始化
+       */
+      function init() {
+        if (!window.WebSocket)
+          return alert('浏览器不支持HTML5,请更新浏览器或者使用其它浏览器')
+        Cam_ControlInit(document.getElementById('CameraCtl'), 0, 0, 600, 400)
+      }
+      /**
+       * handle take photo button
+       * callback GetCaptrueImgResultCB
+       */
+      function takePhoto() {
+        const path = `D:\\\\camera\\${Date.now()}.png`
+        console.log(path)
+        CaptureImage(path)
+      }
+
+      /**
+       * 读取信息
+       * @param {string} image base64 格式图片
+       */
+      async function readInfo(image) {
+        const body = new FormData()
+        body.append('apiKey', '0KjznU2jvnXCplLFwUGXwxdR')
+        body.append('secretKey', '69E6H6lApxmDCI0brw6yQ6zadyIDX9YA')
+        body.append('image', image)
+        const res = await fetch(
+          'http://118.26.65.226:18027/cofco-grains/api/util/baidu/api/idcard',
+          {
+            method: 'POST',
+            body
+          }
+        ).then(res => res.json())
+        if (res?.code === 'error') return alert('解析失败!')
+        const {
+          image_status,
+          words_result: data,
+          ...arg
+        } = JSON.parse(res.data)
+        console.log(image_status)
+        if (image_status !== 'normal') return alert('身份证识别失败!')
+        const {
+          公民身份号码: { words: id },
+          姓名: { words: name }
+        } = data
+        console.log(id, name)
+      }
+
+      let DeviceID = '' // 记录当前运行设备名称
+      let PXARR = '' // 记录当前设备分辨率
+
+      /* ------------------- 以下为 SDK init 后自动触发回调，不可修改函数名 -------------------------*/
+
+      /**
+       * 返回获取的设备数目及设备名称
+       * SDK 自动触发
+       * @param {number} count 设备数目
+       * @param {string[]} list 设备数目
+       */
+      function GetDevCountAndNameResultCB(count, list) {
+        if (!count) return alert('没有发现合适的设备！')
+        DeviceID = list[0] || ''
+        // 获取设备分辨率，回调触发 GetResolutionResultCB
+        Cam_GetDevResolution(DeviceID)
+      }
+
+      /**
+       * 返回获取的设备分辨率信息
+       * Cam_GetDevResolution 回调函数，自动触发
+       * @param {number} count 设备数目
+       * @param {string[]} list 设备数目
+       */
+      function GetResolutionResultCB(count, list) {
+        // 默认开启 500 万分辨率，如果没有，开启小分辨率
+        const index =
+          list.findIndex(item => item === '2592*1944') !== -1
+            ? list.findIndex(item => item === '2592*1944')
+            : count - 1
+
+        PXARR = list[index].split('*') || ['0', '0']
+        Cam_Close() // 关闭摄像头
+        Cam_Open(DeviceID, PXARR[0], PXARR[1]) // 开启摄像头
+      }
+
+      /**
+       * 返回摄像头开启状态
+       * @param {number} state 开户状态 0: 开启成功; !0: 开启失败
+       */
+      function GetCameraOnOffStatus(state) {
+        console.log(state)
+        if (state === 0) return console.log('设备开启成功')
+        alert('设备开启失败，请重试！')
+      }
+
+      /**
+       * 返回拍照结果
+       * @param {number} flag 状态 0: 成功; !0: 失败
+       * @param {string} path 图片保存路径
+       * @param {string} base64Img 图片信息
+       */
+      function GetCaptrueImgResultCB(flag, path, base64Img) {
+        if (flag !== 0) return alert('图片保存失败！')
+        readInfo(base64Img)
+      }
+    </script>
+  </body>
+</html>

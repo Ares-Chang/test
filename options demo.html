@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      var dataList = [
+        {
+          subject:
+            '1.对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素。',
+          chooseScore: [
+            {
+              key: 'A、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '90'
+            },
+            {
+              key: 'B、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '80'
+            },
+            {
+              key: 'C、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '60'
+            },
+            {
+              key: 'D、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '0'
+            },
+            {
+              key: 'E、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '不适用'
+            }
+          ]
+        },
+        {
+          subject:
+            '1.对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素。',
+          chooseScore: [
+            {
+              key: 'A、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '90'
+            },
+            {
+              key: 'B、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '80'
+            },
+            {
+              key: 'C、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '60'
+            },
+            {
+              key: 'D、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '0'
+            },
+            {
+              key: 'E、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '不适用'
+            }
+          ]
+        },
+        {
+          subject:
+            '1.对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素，对操作风险进行有效的识别与评估时充分考虑内部和外部因素。',
+          chooseScore: [
+            {
+              key: 'A、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '90'
+            },
+            {
+              key: 'B、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '80'
+            },
+            {
+              key: 'C、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '60'
+            },
+            {
+              key: 'D、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '0'
+            },
+            {
+              key: 'E、本部门在进行风险识别与评级时充分考虑了内外部因素的影响',
+              value: '不适用'
+            }
+          ]
+        }
+      ]
+
+      dataList.forEach((item, index) => {
+        const node = document.createElement('div')
+        node.id = `question_${index}`
+
+        node.innerHTML = `
+        <div class="subject">
+            <span>${item.subject}</span>
+            <span id="grade_${index}"></span>
+            <select id="select_${index}" onchange="changeSelect(event,${index})"></select>
+        </div>
+        <div class="chooseScore">
+            ${item.chooseScore
+              .map((item, _index) => {
+                return `<div class="chooseScore-item" onclick="handleOptions(${index}, ${_index})">
+                  <div class="chooseScore-item-key">${item.key}</div>
+                </div>`
+              })
+              .join('')}
+        </div>
+    `
+        document.body.appendChild(node)
+      })
+
+      /**
+       * 分数区间上限及下限
+       */
+      const KEYLIST = new Map([
+        ['不适用', '0'],
+        ['0', '60'],
+        ['60', '80'],
+        ['80', '90'],
+        ['90', '100']
+      ])
+
+      /**
+       * 选择分数区间
+       * @param {number} index
+       * @param {number} active
+       */
+      function handleOptions(index, active) {
+        const { value } = dataList[index].chooseScore[active]
+
+        let optionList = []
+        for (let i = Number(value) || 0; i <= KEYLIST.get(value); i++) {
+          optionList.push(`<option value="${i}">${i}</option>`)
+        }
+        document.querySelector(`#select_${index}`).innerHTML = optionList
+        dataList[index].grade = Number(value) || 0
+
+        document
+          .querySelectorAll(
+            `#question_${index} > .chooseScore > .chooseScore-item`
+          )
+          .forEach(item => (item.style.color = '#000'))
+        document.querySelector(
+          `#question_${index} > .chooseScore > .chooseScore-item:nth-child(${
+            active + 1
+          })`
+        ).style.color = 'pink'
+      }
+
+      /**
+       * 修改分数
+       * @param {Event} e
+       * @param {Number} index
+       */
+      function changeSelect({ target: { value } }, index) {
+        dataList[index].grade = value
+      }
+
+      const node = document.createElement('button')
+      node.id = 'submit'
+      node.innerHTML = 'click me!'
+
+      node.onclick = () => {
+        const grade = dataList
+          .map(item => item.grade)
+          .filter(Boolean)
+          .filter(Number)
+        const total = grade.reduce((total, item) => total + Number(item), 0)
+        console.log(grade, total)
+      }
+
+      document.body.appendChild(node)
+    </script>
+  </body>
+</html>
