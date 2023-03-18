@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .boxs {
+        text-align: center;
+      }
+
+      .boxs a {
+        margin-top: 200px;
+        display: inline-block;
+        width: 200px;
+        height: 200px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 20px;
+        transition: all 0.5s;
+      }
+
+      .boxs a img {
+        width: 100%;
+        height: 100%;
+        transition: all 0.5s;
+      }
+
+      .boxs a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .boxs a:hover img {
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="boxs">
+      <a href="#">
+        <img
+          src="data:image/png;base64,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"
+          alt=""
+        />
+      </a>
+    </div>
+
+    <style>
+      .shake {
+        width: 40px;
+        height: 40px;
+        display: block;
+        background: lightgreen;
+        border-radius: 50%;
+        margin: 5px;
+        color: #fff;
+        font-size: 24px;
+        text-align: center;
+        line-height: 40px;
+        cursor: pointer;
+        -webkit-transition: all 0.25s;
+      }
+
+      .shake:hover {
+        -webkit-animation: shake 0.25s;
+        background: lightblue;
+      }
+
+      @-webkit-keyframes shake {
+        0%,
+        10%,
+        55%,
+        90%,
+        94%,
+        98%,
+        100% {
+          -webkit-transform: scale(1, 1);
+        }
+
+        30% {
+          -webkit-transform: scale(1.14, 0.86);
+        }
+
+        75% {
+          -webkit-transform: scale(0.92, 1.08);
+        }
+
+        92% {
+          -webkit-transform: scale(1.04, 0.96);
+        }
+
+        96% {
+          -webkit-transform: scale(1.02, 0.98);
+        }
+
+        99% {
+          -webkit-transform: scale(1.01, 0.99);
+        }
+      }
+    </style>
+    <span class="shake">弹</span>
+
+    <style>
+      .search {
+        width: 80px;
+        height: 40px;
+        border-radius: 40px;
+        border: 2px solid lightblue;
+        position: absolute;
+        right: 200px;
+        outline: none;
+        text-indent: 12px;
+        color: #666;
+        font-size: 16px;
+        padding: 0;
+        -webkit-transition: width 0.5s;
+      }
+
+      .search:focus {
+        width: 200px;
+      }
+    </style>
+    <input class="search" type="text" placeholder="搜索..." />
+
+    <style>
+      .banner {
+        width: 234px;
+        height: 34px;
+        border-radius: 34px;
+        position: absolute;
+        top: 400px;
+        left: 200px;
+      }
+
+      .banner a {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        border: 2px solid lightblue;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        background: lightgreen;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .banner a:hover + span {
+        -webkit-transform: rotate(360deg);
+        opacity: 1;
+      }
+
+      .banner span {
+        display: inline-block;
+        width: auto;
+        padding: 0 20px;
+        height: 34px;
+        line-height: 34px;
+        background: lightblue;
+        border-radius: 34px;
+        text-align: center;
+        position: absolute;
+        color: #fff;
+        text-indent: 25px;
+        opacity: 0;
+        -webkit-transform-origin: 8% center;
+        -webkit-transition: all 1s;
+      }
+    </style>
+    <div class="banner">
+      <a href="javascript:;">博</a>
+      <span>这是我的个人博客</span>
+    </div>
+
+    <style>
+      .banner1 {
+        width: 234px;
+        height: 34px;
+        border-radius: 40px;
+        position: absolute;
+        top: 400px;
+        left: 600px;
+      }
+
+      .banner1 a {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        border: 2px solid lightblue;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        background: lightgreen;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .banner1 a:hover + span {
+        -webkit-transform: translateX(40px);
+        opacity: 1;
+      }
+
+      .banner1 span {
+        display: inline-block;
+        width: auto;
+        padding: 0 20px;
+        height: 30px;
+        line-height: 30px;
+        background: lightblue;
+        border-radius: 30px;
+        text-align: center;
+        color: #fff;
+        position: absolute;
+        top: 2px;
+        opacity: 0;
+        -webkit-transition: all 1s;
+        -webkit-transform: translateX(80px);
+      }
+    </style>
+    <div class="banner1">
+      <a href="javascript:;">博</a>
+      <span>这是我的个人博客</span>
+    </div>
+
+    <style>
+      .wrapper {
+        width: 100px;
+        height: 100px;
+        background: lightblue;
+        border-radius: 50%;
+        border: 2px solid lightgreen;
+        position: absolute;
+        top: 200px;
+        left: 400px;
+        cursor: pointer;
+      }
+
+      .wrapper:after {
+        content: '你猜';
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        border-radius: 50%;
+        text-align: center;
+        color: #fff;
+        font-size: 24px;
+      }
+
+      .wrapper:hover .round {
+        -webkit-transform: scale(1);
+        opacity: 1;
+        -webkit-animation: rotating 6s 1.2s linear infinite alternate;
+      }
+
+      @-webkit-keyframes rotating {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+          -webkit-transform: rotate(180deg);
+        }
+      }
+
+      .round {
+        width: 240px;
+        height: 240px;
+        border: 2px solid lightgreen;
+        border-radius: 50%;
+        position: absolute;
+        top: -70px;
+        left: -70px;
+        -webkit-transition: all 1s;
+        -webkit-transform: scale(0.35);
+        opacity: 0;
+      }
+
+      .round span {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        display: inline-block;
+        border-radius: 50%;
+        background: lightblue;
+        border: 2px solid lightgreen;
+        color: #fff;
+        text-align: center;
+        position: absolute;
+      }
+
+      .round span:nth-child(1) {
+        right: -22px;
+        top: 50%;
+        margin-top: -22px;
+      }
+
+      .round span:nth-child(2) {
+        left: -22px;
+        top: 50%;
+        margin-top: -22px;
+      }
+
+      .round span:nth-child(3) {
+        left: 50%;
+        bottom: -22px;
+        margin-left: -22px;
+      }
+
+      .round span:nth-child(4) {
+        left: 50%;
+        top: -22px;
+        margin-left: -22px;
+      }
+    </style>
+    <div class="wrapper">
+      <div class="round">
+        <span>东邪</span>
+        <span>西毒</span>
+        <span>南乞</span>
+        <span>北丐</span>
+      </div>
+    </div>
+  </body>
+</html>
