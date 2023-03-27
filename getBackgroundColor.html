@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .box {
+        width: 500px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      ul {
+        padding: 0;
+        background: linear-gradient(to right, #0000ff, #ffc0cb);
+      }
+      li {
+        width: 100px;
+        height: 100px;
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="box">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
+    </ul>
+  </body>
+  <script>
+    /**
+     * 需求：获取一个颜色到另外一个颜色的渐变色值
+     * 例如：开始: '#0000ff'; 结束: '#ffc0cb'; 数量: 10;
+     * 返回: ['#0000ff', '#1913f9', '#3326f4', '#4c39ef', '#664cea', '#7f60e5', '#9973df', '#b286da', '#cc99d5', '#e5acd0']
+     */
+
+    var colorArr = gradient('#0000ff', '#ffc0cb', 10)
+    console.log(colorArr)
+
+    const node = document.createElement('div')
+    node.className = 'box'
+    node.innerHTML = colorArr
+      .map(
+        color =>
+          `<div style="background: ${color}; width: 100px; height: 100px;"></div>`
+      )
+      .join('')
+    document.body.appendChild(node)
+
+
+    /**************************** 实现 **************************************/
+
+    // rgb to hex
+    function rgbToHex(r, g, b) {
+      var hex = ((r << 16) | (g << 8) | b).toString(16)
+      return '#' + new Array(Math.abs(hex.length - 7)).join('0') + hex
+    }
+
+    // hex to rgb
+    function hexToRgb(hex) {
+      var rgb = []
+      for (var i = 1; i < 7; i += 2) {
+        rgb.push(parseInt('0x' + hex.slice(i, i + 2)))
+      }
+      return rgb
+    }
+
+    /**
+     * 计算渐变过渡色
+     * @params {string} startColor 开始值
+     * @params {string} endColor 结束值
+     * @params {string} step 步符个数
+     * @returns {array} 返回指定数量的色值数组
+     */
+    function gradient(startColor, endColor, step) {
+      // 将 hex 转换为rgb
+      var sColor = hexToRgb(startColor),
+        eColor = hexToRgb(endColor)
+
+      // 计算R\G\B每一步的差值
+      var rStep = (eColor[0] - sColor[0]) / step
+      gStep = (eColor[1] - sColor[1]) / step
+      bStep = (eColor[2] - sColor[2]) / step
+
+      var gradientColorArr = []
+      for (var i = 0; i < step; i++) {
+        // 计算每一步的hex值
+        gradientColorArr.push(
+          rgbToHex(
+            parseInt(rStep * i + sColor[0]),
+            parseInt(gStep * i + sColor[1]),
+            parseInt(bStep * i + sColor[2])
+          )
+        )
+      }
+      return gradientColorArr
+    }
+  </script>
+</html>
