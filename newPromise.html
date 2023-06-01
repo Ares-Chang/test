@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /* 回调地狱 */
+      // setTimeout(() => {
+      //   console.log('one')
+      //   setTimeout(() => {
+      //     console.log('two')
+      //     setTimeout(() => {
+      //       console.log('three')
+      //       setTimeout(() => {
+      //         console.log('four')
+      //         setTimeout(() => {
+      //           console.log('five')
+      //         }, 1000)
+      //       }, 1000)
+      //     }, 1000)
+      //   }, 1000)
+      // }, 1000)
+    </script>
+
+    <script>
+      // const one = () =>
+      //   setTimeout(() => {
+      //     console.log('one')
+      //     two()
+      //   }, 1000)
+
+      // const two = () =>
+      //   setTimeout(() => {
+      //     console.log('two')
+      //     three()
+      //   }, 1000)
+
+      // const three = () =>
+      //   setTimeout(() => {
+      //     console.log('three')
+      //     four()
+      //   }, 1000)
+
+      // const four = () =>
+      //   setTimeout(() => {
+      //     console.log('four')
+      //     five()
+      //   }, 1000)
+
+      // const five = () =>
+      //   setTimeout(() => {
+      //     console.log('five')
+      //   }, 1000)
+
+      // one()
+    </script>
+
+    <script>
+      const one = () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve('one')
+          }, 1000)
+        })
+
+      const two = () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve('two')
+          }, 1000)
+        })
+
+      const three = () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve('three')
+          }, 1000)
+        })
+
+      const four = () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve('four')
+          }, 1000)
+        })
+
+      const five = () =>
+        new Promise((resolve, reject) =>
+          setTimeout(() => {
+            resolve('five')
+          }, 1000)
+        )
+
+      /* new Promise */
+      
+      // one()
+      //   .then(res => {
+      //     console.log(res)
+      //     return two()
+      //   })
+      //   .then(res => {
+      //     console.log(res)
+      //     return three()
+      //   })
+      //   .then(res => {
+      //     console.log(res)
+      //     return four()
+      //   })
+      //   .then(res => {
+      //     console.log(res)
+      //     return five()
+      //   })
+      //   .then(res => {
+      //     console.log(res)
+      //   })
+
+      /* async/await 语法糖 */
+
+      async function test() {
+        const res1 = await one()
+        console.log(res1)
+        const res2 = await two()
+        console.log(res2)
+        const res3 = await three()
+        console.log(res3)
+        const res4 = await four()
+        console.log(res4)
+        const res5 = await five()
+        console.log(res5)
+      }
+    </script>
+  </body>
+</html>
