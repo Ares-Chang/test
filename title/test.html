@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      .title {
+        color: #fff;
+        height: 50px;
+        background: url(./bg.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+
+        display: flex;
+        align-items: center;
+      }
+      .title-logo {
+        width: 28%;
+        height: 100%;
+      }
+      .title-logo-label {
+        margin: 0 auto;
+        width: 50%;
+        height: 100%;
+        font-size: 24px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-text-stroke: 1px #3663b0;
+        text-stroke: 1px #3663b0;
+        transform: translate(-20%, -16%);
+      }
+      .nav {
+        display: flex;
+        height: 100%;
+      }
+      .nav-item {
+        width: 80px;
+        height: 83%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+      .nav-item:hover {
+        background: url(./hover.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+      .nav-item-label {
+        font-size: 19px;
+        font-weight: bold;
+        background-image: linear-gradient(to top, #74fff4, #fff, #fff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="title">
+        <div class="title-logo">
+          <h2 class="title-logo-label">综合监控一张图</h2>
+        </div>
+        <div class="nav">
+          <div class="nav-item">
+            <span class="nav-item-label">综合</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-item-label">将二矿</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-item-label">将一矿</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

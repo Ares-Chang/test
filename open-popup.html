@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>弹层示例</title>
+    <style>
+      .popup {
+        position: absolute;
+        width: 200px;
+        height: 100px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 20px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="popup-btn">点击生成弹层</button>
+    <audio src="./test.wav" controls autoplay>123</audio>
+
+    <script>
+      function Popup(button, popupContent) {
+        this.button = button
+        this.popupContent = popupContent
+        this.popup = null
+
+        this.createPopup = function () {
+          this.popup = document.createElement('div')
+          this.popup.className = 'popup'
+          this.popup.innerHTML = this.popupContent
+          document.body.appendChild(this.popup)
+
+          // 绑定弹层点击事件（用于关闭弹层）
+          this.popup.addEventListener('click', event => {
+            if (event.target === this.popup) {
+              this.closePopup()
+            }
+          })
+        }
+
+        // 显示弹层
+        this.showPopup = function () {
+          this.setPosition()
+          this.popup.style.display = 'block'
+        }
+
+        // 关闭弹层
+        this.closePopup = function () {
+          this.popup.style.display = 'none'
+        }
+
+        // 设置弹层位置
+        this.setPosition = function () {
+          const buttonRect = this.button.getBoundingClientRect()
+          const buttonCenterX = buttonRect.left + buttonRect.width / 2
+          const screenWidth = window.innerWidth
+
+          if (buttonCenterX <= screenWidth / 2) {
+            // 左侧生成
+            this.popup.style.left = buttonRect.right + 10 + 'px'
+            this.popup.style.top = buttonRect.top + 'px'
+          } else {
+            // 右侧生成
+            this.popup.style.right = screenWidth - buttonRect.left + 10 + 'px'
+            this.popup.style.top = buttonRect.top + 'px'
+          }
+        }
+
+        // 绑定按钮点击事件
+        this.button.addEventListener('click', () => {
+          if (!this.popup) {
+            this.createPopup()
+          }
+          this.showPopup()
+        })
+      }
+
+      // 获取所有按钮
+      const buttons = document.getElementsByClassName('popup-btn')
+      // 创建弹层对象并绑定每个按钮
+      for (let i = 0; i < buttons.length; i++) {
+        const button = buttons[i]
+        const popupContent = '这是弹层' + (i + 1)
+        const popup = new Popup(button, popupContent)
+      }
+    </script>
+  </body>
+</html>
