@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vertical-tabs</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      .tabs {
+        width: 100px;
+        display: flex;
+        flex-direction: column;
+        border-right: 2px solid #e4e7ed;
+        position: relative;
+      }
+      .tabs-item {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        height: 40px;
+        box-sizing: border-box;
+        padding: 6px;
+        padding-right: 10px;
+        cursor: pointer;
+      }
+      .tabs-item:hover {
+        color: #409eff;
+      }
+      .tabs-active {
+        width: 100%;
+        height: 40px;
+        position: absolute;
+        right: -2px;
+        top: 0;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255),
+          rgba(144, 199, 255, 0.3)
+        );
+        border-right: 2px solid #409eff;
+        transition: all 0.2s;
+        pointer-events: none;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="tabs" class="tabs"></div>
+    <script>
+      const doc = document.getElementById('tabs')
+
+      let active = 2
+      const tabs = [
+        {
+          id: '1',
+          label: 'tab1'
+        },
+        {
+          id: '2',
+          label: 'tab2'
+        },
+        {
+          id: '3',
+          label: 'tab3'
+        },
+        {
+          id: '4',
+          label: 'tab4'
+        }
+      ]
+
+      doc.innerHTML =
+        tabs
+          .map(
+            (item, index) =>
+              `<div class="tabs-item" onclick="handleTabs(${index})">${item.label}</div>`
+          )
+          .join('') + '<div class="tabs-active"></div>'
+
+      function handleTabs(index) {
+        active = index
+        const list = document.querySelectorAll('.tabs > .tabs-item')
+        // list.forEach((item, _index) => {
+        //   item.classList.remove('tabs-active')
+        //   if (_index === index) item.classList.add('tabs-active')
+        // })
+        // 获取 list 点击元素距离父元素上边的高度(包含 padding)
+
+        // 获取 list 点击元素距离父元素上边的 offsetTop
+        // const top = list[index].getBoundingClientRect().top
+        const top = list[index].offsetTop
+        const ac = document.querySelector('.tabs-active')
+        ac.style.top = `${top}px`
+      }
+    </script>
+  </body>
+</html>
