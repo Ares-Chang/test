@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>anchor</title>
+    <style>
+      div {
+        display: flex;
+        flex-direction: column;
+      }
+      div > a {
+        height: 50vh;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="test()">test</button>
+    <!-- <a href="#1">1</a>
+    <a href="#2">2</a>
+    <a href="#3">3</a>
+    <a href="#4">4</a> -->
+    <div>
+      <a id="a1">1</a>
+      <a id="a2">2</a>
+      <a id="a3">3</a>
+      <a id="a4">4</a>
+    </div>
+  </body>
+
+  <script>
+    function test() {
+      document.querySelector('#a3').scrollIntoView(true)
+    }
+  </script>
+</html>
